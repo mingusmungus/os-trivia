@@ -1,0 +1,12 @@
+[
+    	{"q": "What is the default port for SSH?", "a": ["22"]},
+    	{"q": "What command reveals system calls in Linux?", "a": ["strace"]},
+    	{"q": "What signal does Ctrl+C send to a process?", "a": ["sigint"]},
+	{"q": "What room is the class CSE536 in?", "a": ["byeng209"]},
+	{"q": "What computing issue does the dining philosopher's problem demonstrate? ", "a": ["deadlock"]},
+	{"q": "This was created as an alternative to monolithic kernels.", "a": ["microkernel", "microkernels"]},
+	{"q": "What command reveals all running processes?", "a": ["top", "ps"]},
+	{"q": "In the Unix filesystems, everything is a . . .", "a": ["file"]},
+	{"q": "Name the variable in Werewolves that if set (=1) would result in TOCTOU vulnerabilities.", "a": ["moderatorlogmode"]},
+	{"q": "The OS sends this signal if you touch memory you're not allowed to.", "a": ["sigsegv"]}
+]
