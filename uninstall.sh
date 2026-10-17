@@ -21,6 +21,7 @@ for i in {1..20}; do
     PLAYER="player$i"
     pkill -u "$PLAYER" 2>/dev/null
     userdel -r "player$i" 2>/dev/null
+    groupdel "player$i" 2>/dev/null
     rm -rf /home/player$i
     echo "player$i removed"
 done
