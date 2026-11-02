@@ -61,7 +61,17 @@ class TCPServer:
                 except Exception:
                     pass
         return messages
-
+    
+    # Cleanly remove all players
+    def disconnect_all(self):
+        for conn in list(self.clients.keys()):
+            try:
+                self.sel.unregister(conn)
+                conn.close()
+            except Exception:
+                pass
+        self.clients.clear()
+    
 class TCPClient:
     def __init__(self, socket_path=(SERVER_IP, 5555)):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

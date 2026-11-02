@@ -95,8 +95,7 @@ while True:
                 attempted_players.add(conn) # Keep track of player attempts
                 state = ANSWERING
                 active_buzzer = conn
-                server.broadcast({"msg": f"{players[conn]} buzzed in!"})
-                print(f"{players[conn]} buzzed in!")
+                display_log(f"{players[conn]} buzzed in!")
                 server.send_to(conn, {"msg": "Type your answer now!"})
         
         elif action == "text_input":
@@ -117,36 +116,26 @@ while True:
                 # Give correct answers a point, wrong answers just loops to WAIT_BUZZ state
                 if clean_answer in accepted_answers:
                     score[conn] += 1
-                    server.broadcast({"msg": f"{players[conn]} got it right! Answer: {current_trivia['a'][0]}"})
-                    server.broadcast({"msg": f"{players[conn]} Score: {score[conn]}"})
-                    log_event(f"{players[conn]} got it right! Answer: {current_trivia['a'][0]}")
-                    log_event(f"{players[conn]} Score: {score[conn]}")
-                    print(f"{players[conn]} got it right! Answer: {current_trivia['a'][0]}")
-                    print(f"{players[conn]} Score: {score[conn]}")
+                    display_log(f"{players[conn]} got it right! Answer: {current_trivia['a'][0]}")
+                    display_log(f"{players[conn]} Score: {score[conn]}")
                     state = RESOLUTION
 
                 else:
                     score[conn] -= 1
-                    server.broadcast({"msg": f"{players[conn]} guessed wrong! '{user_text}', which is not correct."})
-                    log_event(f"{players[conn]} guessed wrong! '{user_text}', which is not correct.")
+                    display_log(f"{players[conn]} guessed wrong! '{user_text}', which is not correct.")
 
                     if len(attempted_players) >= len(players):
-                        server.broadcast({"msg": "Everyone has used up their attempts! Moving on . . ."})
-                        log_event("Everyone has used up their attempts! Moving on . . .")
-                        print("Everyone has used up their attempts! Moving on . . .")
+                        display_log("Everyone has used up their attempts! Moving on . . .")
                         state = RESOLUTION
 
                     else:
-                        server.broadcast({"msg": "Anyone else want to try?"})
-                        print("Anyone else want to try?")
+                        display_log("Anyone else want to try?")
                         state = WAIT_BUZZ
                         active_buzzer = None
                 
             # Otherwise, treat the text as a global chat message
             else:
-                print(f"[CHAT] {players[conn]}: {user_text}")
-                server.broadcast({"msg": f"[{players[conn]}]: {user_text}"})
-                log_event(f"[CHAT] {players[conn]}: {user_text}")
+                display_log(f"[CHAT] {players[conn]}: {user_text}")
         
         # Remove traces of dead socket upon player disconnect
         elif action == "disconnect":
@@ -155,8 +144,7 @@ while True:
                 score.pop(conn, None)
                 attempted_players.discard(conn)
                 
-                server.broadcast({"msg": f"[SERVER] {dropped_name} disconnected."})
-                print(f"{dropped_name} disconnected.")
+                display_log(f"{dropped_name} disconnected.")
                 
                 # Edge case: The active player disconnects before hitting enter
                 if state == ANSWERING and conn == active_buzzer:
@@ -196,7 +184,7 @@ Rules:
  > All lowercase letters/numbers, no spaces.
    (e.g., Q: 'What's your name?' A: 'firstnamelastname123')
 """
-            display_log(welcome_msg)
+            server.broadcast({"msg": welcome_msg})
             state = ASK_QUESTION
     
     if state == ASK_QUESTION:
@@ -235,19 +223,19 @@ Rules:
             else:
                 display_log(result_msg)
         
-        print("Shutting down server . . .")
-        log_event("Server shut down success")
-
-        print("Resetting server for a new game...")
-        time.sleep(10)
-
+        # Flush the final messages, then sever the connections
+        server.broadcast({"msg": "Disconnecting all players. Rejoin to play again!"})
+        time.sleep(1) 
+        server.disconnect_all()
+        
+        # Scrub the application state
+        players.clear()
+        score.clear()
+        attempted_players.clear()
+        
+        # Return to lobby
+        print("Server reset. Waiting for new players...")
         state = LOBBY
         questions_asked = 0
-        attempted_players.clear()
         random.shuffle(question_bank)
-
-        for conn in score:
-            score[conn] = 0
-            
-        server.broadcast({"msg": "\n--- NEW GAME LOBBY ---"})
 
