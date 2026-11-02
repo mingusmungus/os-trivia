@@ -3,7 +3,7 @@ import json
 import random
 import sys
 import select
-from comm import UnixDomainServer
+from comm import TCPServer
 
 # State definitions
 LOBBY = 0
@@ -15,7 +15,7 @@ GAME_OVER = 5
 
 # Game variables
 questions_asked = 0
-server = UnixDomainServer()
+server = TCPServer()
 state = LOBBY
 players = {}
 score = {}

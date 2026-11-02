@@ -1,7 +1,7 @@
 import threading
 import time
 import sys
-from comm import UnixDomainClient
+from comm import TCPClient
 
 def listen_for_server(client):
     while True:
@@ -12,7 +12,7 @@ def listen_for_server(client):
         time.sleep(0.1)
 
 username = input("Enter username: ")
-client = UnixDomainClient()
+client = TCPClient()
 client.send({"action": "join", "username": username})
 
 # Start background thread to print incoming broadcasts

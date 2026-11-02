@@ -3,20 +3,21 @@ import selectors
 import json
 import os
 
-class UnixDomainServer:
-    def __init__(self, socket_path="/tmp/trivia.sock"):
+SERVER_IP = "127.0.0.1"
+
+class TCPServer:
+    # Swapped out the socket path for IP and port
+    def __init__(self, socket_path=("0.0.0.0", 5555)):
         self.socket_path = socket_path
         self.sel = selectors.DefaultSelector()
         self.clients = {}  # Maps socket to buffer
         
-        if os.path.exists(self.socket_path):
-            os.remove(self.socket_path)
-            
-        self.sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        # Swapped AF_UNIX for AF_INET
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
         self.sock.bind(self.socket_path)
         self.sock.listen()
         self.sock.setblocking(False)
-        os.chmod(self.socket_path, 0o777) # Allow all local Linux users to connect
         
         self.sel.register(self.sock, selectors.EVENT_READ, data="accept")
 
@@ -60,9 +61,9 @@ class UnixDomainServer:
                     pass
         return messages
 
-class UnixDomainClient:
-    def __init__(self, socket_path="/tmp/trivia.sock"):
-        self.sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+class TCPClient:
+    def __init__(self, socket_path=(SERVER_IP, 5555)):
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect(socket_path)
         self.buffer = ""
 
