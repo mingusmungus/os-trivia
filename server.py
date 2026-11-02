@@ -26,14 +26,14 @@ current_trivia = None
 # Writes log to file
 def log_event(message):
     try:
-        with open('/home/moderator/data/scores.log', 'a') as f:
+        with open('scores.log', 'a') as f:
             f.write(f"{time.strftime('%H:%M:%S')} - {message}\n")
     except Exception as e:
         print(f"[ERROR] Could not write to log: {e}")
 
 # Load the trivia bank securely
 try:
-    with open('/home/moderator/trivia.json', 'r') as f:
+    with open('trivia.json', 'r') as f:
         question_bank = json.load(f)
         max_questions = len(question_bank)
 
