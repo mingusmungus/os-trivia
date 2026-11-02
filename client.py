@@ -9,6 +9,13 @@ def listen_for_server(client):
         for msg in messages:
             print(f"\n[Server]: {msg.get('msg')}")
             print("> ", end="", flush=True) # Redraw prompt
+
+            # Graceful exit on disconnect
+            if msg.get("action") == "server_disconnect":
+                print("\nConnection closed by server. Thanks for playing!\n")
+                client.sock.close()
+                sys.exit(0)
+                
         time.sleep(0.1)
 
 username = input("Enter username: ")

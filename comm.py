@@ -89,6 +89,8 @@ class TCPClient:
             data = self.sock.recv(1024)
             if data:
                 self.buffer += data.decode('utf-8')
+            elif data == b"":
+                return [{"action": "server_disconnect"}]
         except BlockingIOError:
             pass
 
