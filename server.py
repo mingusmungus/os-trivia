@@ -12,6 +12,7 @@ WAIT_BUZZ = 2
 ANSWERING = 3
 RESOLUTION = 4
 GAME_OVER = 5
+STARTING = 6
 
 # Game variables
 questions_asked = 0
@@ -22,6 +23,7 @@ score = {}
 attempted_players = set()
 active_buzzer = None
 current_trivia = None
+countdown_start = 0
 
 # Writes log to file
 def log_event(message):
@@ -30,6 +32,13 @@ def log_event(message):
             f.write(f"{time.strftime('%H:%M:%S')} - {message}\n")
     except Exception as e:
         print(f"[ERROR] Could not write to log: {e}")
+
+# Broadcast, log message, and print to server's terminal
+# Useful when we want to do all 3, but that's not always the case
+def display_log(message):
+    server.broadcast({"msg": message})
+    log_event(message)
+    print(message)
 
 # Load the trivia bank securely
 try:
@@ -45,48 +54,10 @@ except PermissionError:
     exit(1)
 
 print("Server running . . .")
-print("Messaging players . . .")
-print("**** Press ENTER to begin ****")
 log_event("Server running . . .")
 
 # Server state machine processing begins
 while True:
-    if state == LOBBY:
-        # Checking if the moderator presses enter
-        readable, _, _ = select.select([sys.stdin], [], [], 0.0)
-
-        if readable:
-            sys.stdin.readline()
-
-            if len(players) > 0:
-                welcome_msg = r"""
-   .=======================.
-   |  ____   _____         |
-   | / __ \ / ____| TRIVIA |
-   | |  | | \___ \         |
-   | |__| | ____) |        |
-   | \____/|_____/         |
-   |                       |
-   '======================='
-   _[_____________________]_
-
-Welcome to OS Trivia!
-Rules:
- > Press ENTER to buzz in.
- > One attempt per question.
- > Right: +1 pt | Wrong: -1 pt. Buzz wisely!
- > All lowercase letters/numbers, no spaces.
-   (e.g., Q: 'What's your name?' A: 'firstnamelastname123')
-"""
-                server.broadcast({"msg": welcome_msg})
-                print("Game start!")
-                log_event("Game start!")
-                state = ASK_QUESTION
-
-            else:
-                print("Can't start without any players!\n")
-                print("**** Press ENTER to begin ****")
-
     # Process network events
     messages = server.poll_events(timeout=0.1)
     for conn, msg in messages:
@@ -98,14 +69,23 @@ Rules:
             score[conn] = 0
 
             # Broadcast lets users know who joined, also print it locally to MOD terminal
-            server.broadcast({"msg": f"{players[conn]} joined! (Total: {len(players)})"})
-            print(f"{players[conn]} joined! (Total: {len(players)})")
-            log_event(f"{players[conn]} joined! (Total: {len(players)})")
+            display_log(f"{players[conn]} joined! (Total: {len(players)})")
 
             # Automatic start based on player count
-            # if state == LOBBY and len(players) >= 3:
-                # print("Starting game. . .")
-                # state = ASK_QUESTION
+            if state == LOBBY and len(players) >= 1:
+                state = STARTING
+                countdown_start = time.time()
+                server.broadcast({"msg": "Minimum players reached! Game starting in 10 seconds..."})
+                print("Countdown started. . .")
+                
+            # Sync late-joiners with the current question
+            elif state in [WAIT_BUZZ, ANSWERING] and current_trivia:
+                server.send_to(conn, {"msg": "You joined mid-game! Here is the current question:"})
+                server.send_to(conn, {"type": "question", "msg": f"Q: {current_trivia['q']}"})
+                
+                # If someone is already typing their answer, let the new player know
+                if state == ANSWERING and active_buzzer:
+                    server.send_to(conn, {"msg": f"...waiting for {players[active_buzzer]} to answer."})
        
         elif action == "buzz" and state == WAIT_BUZZ:
             if conn in attempted_players:
@@ -118,7 +98,7 @@ Rules:
                 server.broadcast({"msg": f"{players[conn]} buzzed in!"})
                 print(f"{players[conn]} buzzed in!")
                 server.send_to(conn, {"msg": "Type your answer now!"})
-
+        
         elif action == "text_input":
             user_text = msg.get("text", "")
             
@@ -167,8 +147,58 @@ Rules:
                 print(f"[CHAT] {players[conn]}: {user_text}")
                 server.broadcast({"msg": f"[{players[conn]}]: {user_text}"})
                 log_event(f"[CHAT] {players[conn]}: {user_text}")
+        
+        # Remove traces of dead socket upon player disconnect
+        elif action == "disconnect":
+            if conn in players:
+                dropped_name = players.pop(conn)
+                score.pop(conn, None)
+                attempted_players.discard(conn)
+                
+                server.broadcast({"msg": f"[SERVER] {dropped_name} disconnected."})
+                print(f"{dropped_name} disconnected.")
+                
+                # Edge case: The active player disconnects before hitting enter
+                if state == ANSWERING and conn == active_buzzer:
+                    active_buzzer = None
+                    server.broadcast({"msg": "Active player disconnected! Anyone else want to try?"})
+                    state = WAIT_BUZZ
 
     # Process Game State (e.g., triggering the next question)
+    # Automatic start based on player count
+    if state == STARTING:
+        if time.time() - countdown_start >= 10:
+            # https://www.asciiart.eu/art/5e6e97e0bd18eee0, ASCII art by Harry Mason (Hajoma)
+            welcome_msg = r"""
+         _nnnn_                      
+        dGGGGMMb     ,"""""""""""""".
+       @p~qp~~qMb    |  OS Trivia!  |
+       M|@||@) M|   _;..............'
+       @,----.JM| -'
+      JS^\__/  qKL
+     dZP        qKRb
+    dZP          qKKb
+   fZP            SMMb
+   HZM            MMMM
+   FqM            MMMM
+ __| ".        |\dS"qML
+ |    `.       | `' \Zq
+_)      \.___.,|     .'
+\____   )MMMMMM|   .'
+     `-'       `--' 
+
+
+Welcome to OS Trivia!
+Rules:
+ > Press ENTER to buzz in.
+ > One attempt per question.
+ > Right: +1 pt | Wrong: -1 pt. Buzz wisely!
+ > All lowercase letters/numbers, no spaces.
+   (e.g., Q: 'What's your name?' A: 'firstnamelastname123')
+"""
+            display_log(welcome_msg)
+            state = ASK_QUESTION
+    
     if state == ASK_QUESTION:
         if questions_asked >= max_questions:
             state = GAME_OVER
@@ -200,17 +230,24 @@ Rules:
         for c, player_score in sorted_scores:
             player_name = players[c]
             result_msg = f"{player_name}: {player_score}"
-
             if player_score == max_questions:
-                server.broadcast({"msg": f"Wow! A perfect score! A round of applause for {player_name}!"})
-                log_event(f"Wow! A perfect score! A round of applause for {player_name}!")
-                print(f"Wow! A perfect score! A round of applause for {player_name}!")
+                display_log(f"Wow! A perfect score! A round of applause for {player_name}!")
             else:
-                print(f"{result_msg}")
-                log_event(result_msg)
-                server.broadcast({"msg": result_msg})
+                display_log(result_msg)
         
         print("Shutting down server . . .")
         log_event("Server shut down success")
-        break
+
+        print("Resetting server for a new game...")
+        time.sleep(10)
+
+        state = LOBBY
+        questions_asked = 0
+        attempted_players.clear()
+        random.shuffle(question_bank)
+
+        for conn in score:
+            score[conn] = 0
+            
+        server.broadcast({"msg": "\n--- NEW GAME LOBBY ---"})
 

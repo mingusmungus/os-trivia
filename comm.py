@@ -57,6 +57,7 @@ class TCPServer:
                         self.sel.unregister(conn)
                         conn.close()
                         del self.clients[conn]
+                        messages.append((conn, {"action": "disconnect"}))
                 except Exception:
                     pass
         return messages
