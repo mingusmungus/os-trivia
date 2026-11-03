@@ -1,0 +1,57 @@
+00:57:38 - Server running . . .
+00:57:45 - zane joined! (Total: 1)
+00:57:55 - Question: What is the default port for SSH?
+00:58:01 - zane buzzed in!
+00:58:02 - zane got it right! Answer: 22
+00:58:02 - zane Score: 1
+00:58:05 - Question: What command reveals system calls in Linux?
+00:58:07 - zane buzzed in!
+00:58:09 - zane got it right! Answer: strace
+00:58:09 - zane Score: 2
+00:58:13 - Question: What computing issue does the dining philosopher's problem demonstrate? 
+00:58:17 - zane disconnected.
+00:58:28 - zane joined! (Total: 1)
+00:58:31 - zane buzzed in!
+00:58:37 - zane disconnected.
+00:58:44 - zane joined! (Total: 1)
+00:58:46 - zane buzzed in!
+00:58:48 - zane got it right! Answer: deadlock
+00:58:48 - zane Score: 1
+00:58:51 - Question: What command reveals all running processes?
+00:58:57 - zane disconnected.
+00:59:49 - Server running . . .
+00:59:56 - zane joined! (Total: 1)
+01:00:06 - Question: What signal does Ctrl+C send to a process?
+01:00:09 - zane disconnected.
+01:04:47 - Server running . . .
+01:04:56 - alic joined! (Total: 1)
+01:05:06 - Question: What room is the class CSE536 in?
+01:05:09 - alic disconnected.
+01:06:45 - Server running . . .
+01:06:48 - z joined! (Total: 1)
+01:06:51 - z disconnected.
+01:07:25 - Server running . . .
+01:07:29 - z joined! (Total: 1)
+01:07:32 - z disconnected.
+01:07:52 - Server running . . .
+01:07:55 - z joined! (Total: 1)
+01:08:05 - Question: What command reveals all running processes?
+01:08:08 - z disconnected.
+01:08:15 - z joined! (Total: 1)
+01:08:17 - [CHAT] z: a
+01:08:19 - [CHAT] z: hello
+01:08:21 - z disconnected.
+01:15:40 - Server running . . .
+01:15:49 - z joined! (Total: 1)
+01:15:52 - z disconnected.
+01:15:59 - 
+Game Over! Calculating final scores . . .
+01:16:05 - z joined! (Total: 1)
+01:16:15 - Question: What room is the class CSE536 in?
+01:16:19 - z disconnected.
+01:40:51 - Server running . . .
+01:40:58 - z joined! (Total: 1)
+01:41:08 - Question: Name the variable in Werewolves that if set (=1) would result in TOCTOU vulnerabilities.
+01:41:12 - z disconnected.
+01:41:12 - 
+Game Over! Calculating final scores . . .

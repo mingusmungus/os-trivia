@@ -163,16 +163,16 @@ while True:
        @p~qp~~qMb    |  OS Trivia!  |
        M|@||@) M|   _;..............'
        @,----.JM| -'
-      JS^\__/  qKL
+      JS^\\__/ qKL
      dZP        qKRb
     dZP          qKKb
    fZP            SMMb
    HZM            MMMM
    FqM            MMMM
- __| ".        |\dS"qML
- |    `.       | `' \Zq
-_)      \.___.,|     .'
-\____   )MMMMMM|   .'
+ __| ".        |\\dS"qML
+ |    `.       | `' \\Zq
+_)      \\.___.,|     .'
+\\____   )MMMMMM|   .'
      `-'       `--' 
 
 
@@ -187,25 +187,31 @@ Rules:
             server.broadcast({"msg": welcome_msg})
             state = ASK_QUESTION
     
+    # Dish out another question until bank is exhausted
     if state == ASK_QUESTION:
-        if questions_asked >= max_questions:
+        # if questions_asked >= max_questions:
+        #     state = GAME_OVER
+        # else:
+        attempted_players.clear()                       # After each question, attempts are renewed
+        current_trivia = question_bank[questions_asked] # Get next question
+        questions_asked += 1
+        server.broadcast({"type": "question", "msg": f"Q: {current_trivia['q']}"})
+        print(f"Question: {current_trivia['q']}")
+        log_event(f"Question: {current_trivia['q']}")
+        state = WAIT_BUZZ
+
+    # End game if all players disconnect
+    if state == WAIT_BUZZ:
+        if len(players) == 0:
             state = GAME_OVER
-        else:
-            attempted_players.clear()                       # After each question, attempts are renewed
-            current_trivia = question_bank[questions_asked] # Get next question
-            questions_asked += 1
-            server.broadcast({"type": "question", "msg": f"Q: {current_trivia['q']}"})
-            print(f"Question: {current_trivia['q']}")
-            log_event(f"Question: {current_trivia['q']}")
-            state = WAIT_BUZZ
 
     if state == RESOLUTION:
         if questions_asked >= max_questions:
             state = GAME_OVER
         else:
             server.broadcast({"msg": f"Next round in 5 seconds, get ready!"})
-            print("Next round in 5 seconds, get ready!")
-            time.sleep(5)
+            print("Next round in 3 seconds, get ready!")
+            time.sleep(3)
             state = ASK_QUESTION
 
     if state == GAME_OVER:
