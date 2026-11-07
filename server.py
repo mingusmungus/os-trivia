@@ -107,7 +107,7 @@ while True:
                 accepted_answers = [ans.lower() for ans in current_trivia['a']]
 
                 # Clean the input
-                clean_answer = user_text.strip().lower()
+                clean_answer = "".join(user_text.lower().split())
                 raw_answer = current_trivia['a']
 
                 if isinstance(raw_answer, str):
@@ -135,7 +135,7 @@ while True:
                 
             # Otherwise, treat the text as a global chat message
             else:
-                display_log(f"[CHAT] {players[conn]}: {user_text}")
+                display_log(f"[{players[conn]}]: {user_text}")
         
         # Remove traces of dead socket upon player disconnect
         elif action == "disconnect":
@@ -156,46 +156,17 @@ while True:
     # Automatic start based on player count
     if state == STARTING:
         if time.time() - countdown_start >= 10:
-            # https://www.asciiart.eu/art/5e6e97e0bd18eee0, ASCII art by Harry Mason (Hajoma)
-            welcome_msg = r"""
-         _nnnn_                      
-        dGGGGMMb     ,"""""""""""""".
-       @p~qp~~qMb    |  OS Trivia!  |
-       M|@||@) M|   _;..............'
-       @,----.JM| -'
-      JS^\\__/ qKL
-     dZP        qKRb
-    dZP          qKKb
-   fZP            SMMb
-   HZM            MMMM
-   FqM            MMMM
- __| ".        |\\dS"qML
- |    `.       | `' \\Zq
-_)      \\.___.,|     .'
-\\____   )MMMMMM|   .'
-     `-'       `--' 
-
-
-Welcome to OS Trivia!
-Rules:
- > Press ENTER to buzz in.
- > One attempt per question.
- > Right: +1 pt | Wrong: -1 pt. Buzz wisely!
- > All lowercase letters/numbers, no spaces.
-   (e.g., Q: 'What's your name?' A: 'firstnamelastname123')
-"""
+            # Greet everyone and start after a 10 second countdown
+            welcome_msg = "Welcome! The game is starting now!"
             server.broadcast({"msg": welcome_msg})
             state = ASK_QUESTION
     
     # Dish out another question until bank is exhausted
     if state == ASK_QUESTION:
-        # if questions_asked >= max_questions:
-        #     state = GAME_OVER
-        # else:
         attempted_players.clear()                       # After each question, attempts are renewed
         current_trivia = question_bank[questions_asked] # Get next question
         questions_asked += 1
-        server.broadcast({"type": "question", "msg": f"Q: {current_trivia['q']}"})
+        server.broadcast({"type": "question", "msg": f"------------------------> Q{questions_asked}: {current_trivia['q']} <------------------------"})
         print(f"Question: {current_trivia['q']}")
         log_event(f"Question: {current_trivia['q']}")
         state = WAIT_BUZZ
