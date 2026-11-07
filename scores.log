@@ -470,3 +470,65 @@ Game Over! Calculating final scores . . .
 07:43:33 - alice disconnected.
 07:43:33 - 
 Game Over! Calculating final scores . . .
+08:39:38 - Server running . . .
+08:39:43 - alice joined! (Total: 1)
+08:39:46 - bob joined! (Total: 2)
+08:39:53 - [alice]: hi
+08:39:53 - Question: This form of IPC is favorred due to it's simplicity resulting from abstracting away complex network frameworks.
+08:39:56 - [bob]: hello
+08:40:05 - alice buzzed in!
+08:40:07 - alice got it right! Answer: rpc
+08:40:07 - alice Score: 1
+08:40:10 - Question: What is the default port for SSH?
+08:40:14 - bob buzzed in!
+08:40:15 - bob got it right! Answer: 22
+08:40:15 - bob Score: 1
+08:40:18 - Question: This data structure can help control shared resources among threads.
+08:40:39 - bob disconnected.
+08:40:47 - alice disconnected.
+08:40:47 - 
+Game Over! Calculating final scores . . .
+09:03:18 - Server running . . .
+09:03:25 - alice joined! (Total: 1)
+09:03:29 - [alice]: hello
+09:03:30 - [alice]: test
+09:03:35 - Question: The OS sends this signal if you touch memory you're not allowed to.
+09:03:43 - alice buzzed in!
+09:03:53 - Time's up! alice took too long.
+09:03:53 - Everyone has used up their attempts! Moving on . . .
+09:03:56 - Question: What computing issue does the dining philosopher's problem demonstrate? 
+09:04:07 - bob joined! (Total: 2)
+09:04:30 - bob buzzed in!
+09:04:40 - Time's up! bob took too long.
+09:04:40 - Question is back on the floor. Anyone else want to try?
+09:04:48 - alice buzzed in!
+09:04:52 - alice got it right! Answer: deadlock
+09:04:52 - alice Score: 1
+09:04:55 - Question: A file descriptor of 1 represents . . .
+09:05:00 - alice buzzed in!
+09:05:03 - alice guessed wrong! 'stdin', which is not correct.
+09:05:03 - Anyone else want to try?
+09:05:11 - bob buzzed in!
+09:05:13 - bob got it right! Answer: stdout
+09:05:13 - bob Score: 1
+09:05:16 - Question: Name the vulnerability where a low-privilege attacker uses a high-privilege program to do its bidding.
+09:05:48 - alice buzzed in!
+09:05:51 - alice got it right! Answer: confuseddeputy
+09:05:51 - alice Score: 1
+09:05:54 - Question: This IPC method routes the stdout of one process to the stdin of another.
+09:06:34 - [alice]: what could the answer be
+09:06:38 - alice disconnected.
+09:06:50 - bob disconnected.
+09:06:50 - 
+Game Over! Calculating final scores . . .
+09:08:05 - Server running . . .
+09:08:09 - alice joined! (Total: 1)
+09:08:11 - [alice]: hello
+09:08:19 - Question: What signal does Ctrl+C send to a process?
+09:08:55 - alice buzzed in!
+09:08:59 - alice got it right! Answer: sigint
+09:08:59 - alice Score: 1
+09:09:02 - Question: Name the exploit that takes advantage of a hardware vulnerability in DRAM by repeatedly accessing two nearby rows of memory cells to flip the bit of nearby rows.
+09:09:09 - alice disconnected.
+09:09:09 - 
+Game Over! Calculating final scores . . .

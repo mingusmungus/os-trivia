@@ -24,6 +24,7 @@ attempted_players = set()
 active_buzzer = None
 current_trivia = None
 countdown_start = 0
+countdown_timer = 0
 
 # Writes log to file
 def log_event(message):
@@ -95,8 +96,10 @@ while True:
                 attempted_players.add(conn) # Keep track of player attempts
                 state = ANSWERING
                 active_buzzer = conn
+                countdown_timer = time.time()
                 display_log(f"{players[conn]} buzzed in!")
-                server.send_to(conn, {"msg": "Type your answer now!"})
+                server.send_to(conn, {"msg": "Type your answer now!  You have 10 seconds . . ."})
+                
         
         elif action == "text_input":
             user_text = msg.get("text", "")
@@ -161,12 +164,26 @@ while True:
             server.broadcast({"msg": welcome_msg})
             state = ASK_QUESTION
     
+    # Timeout check for the active buzzer
+    if state == ANSWERING:
+        if time.time() - countdown_timer >= 10:
+            display_log(f"Time's up! {players[active_buzzer]} took too long.")
+            
+            if len(attempted_players) >= len(players):
+                display_log("Everyone has used up their attempts! Moving on . . .")
+                state = RESOLUTION
+            else:
+                display_log("Question is back on the floor. Anyone else want to try?")
+                state = WAIT_BUZZ
+                active_buzzer = None
+
     # Dish out another question until bank is exhausted
     if state == ASK_QUESTION:
         attempted_players.clear()                       # After each question, attempts are renewed
         current_trivia = question_bank[questions_asked] # Get next question
         questions_asked += 1
-        server.broadcast({"type": "question", "msg": f"------------------------> Q{questions_asked}: {current_trivia['q']} <------------------------"})
+        server.broadcast({"msg": "\n"})
+        server.broadcast({"type": "question", "msg": f"Q{questions_asked}: ------------> {current_trivia['q']}"})
         print(f"Question: {current_trivia['q']}")
         log_event(f"Question: {current_trivia['q']}")
         state = WAIT_BUZZ
@@ -180,7 +197,7 @@ while True:
         if questions_asked >= max_questions:
             state = GAME_OVER
         else:
-            server.broadcast({"msg": f"Next round in 5 seconds, get ready!"})
+            server.broadcast({"msg": f"Next round in 3 seconds, get ready!"})
             print("Next round in 3 seconds, get ready!")
             time.sleep(3)
             state = ASK_QUESTION
@@ -188,7 +205,7 @@ while True:
     if state == GAME_OVER:
         print("\nGame Over! Calculating final scores . . .")
         log_event("\nGame Over! Calculating final scores . . .")
-        server.broadcast({"msg": "\n Game Over! Calculating final scores . . ."})
+        server.broadcast({"msg": "\nGame Over! Calculating final scores . . ."})
 
         sorted_scores = sorted(score.items(), key=lambda item: item[1], reverse=True)
 
