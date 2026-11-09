@@ -37,9 +37,9 @@ RULES_TITLE = "Rules:"
 RULES = [
     "Press BUZZER! to buzz in when you know the answer.",
     "One attempt per question.",
-    "Right: +1 pt | Wrong: -1 pt. Buzz wisely!",
+    "Correct Answers: +1 pt.",
     "You can chat with other players!",
-    "Scroll chat with mouse wheel or PageUP/PageDOWN",
+    "Scroll chat with mouse wheel or PageUP/PageDOWN.",
     "Press ESC to disconnect.",
 ]
 BULLET = "> "

@@ -1,27 +1,28 @@
 # OS Trivia
 
+### Disclaimer:
+Claude was used to write the curses tui in client_tui.py.
+
 ### To get the game running:
-1. Run sudo ./install.sh to get the moderator/sockets setup
-2. Run sudo ./mkusr.sh for each player in the game
-3. Log into moderator and player1, player2, etc. using sudo su - [name]
-4. Moderator runs python3 server.py, players run python3 client.py
-5. Run sudo ./uninstall.sh when finished
+1. Download the latest release and launch the executable.
+2. Enter your username (max 15 characters).
+3. Enter the current address:port for the ngrok proxy
 
 ### Game rules:
-* Press ENTER to buzz in.
+* Press **BUZZER!** to buzz in when you know the answer.
 * One attempt per question.
-* Right: +1 pt | Wrong: -1 pt. Buzz wisely!
-* All lowercase letters/numbers, no spaces.
-  *(e.g., Q: 'What's your name?' A: 'firstnamelastname123')
+* Correct Answers: +1 pt.
+* You can chat with other players!
+* Scroll chat with mouse wheel or PageUP/PageDOWN.
+* Press ESC to disconnect.
 
 ### Communication Library: 
-Unix Sockets, implemented in 'comm.py'
+TCP Sockets, implemented in 'comm.py'. Server is hosted on Google Cloud with ngrok being used to secure the server/client connection.
 
 ### Files:
-* server.py: Hosts the state machine logic and runs the game server.
-* client.py: Lets players communicate with the server for buzzing/chatting/answering.
-* comm.py: Implements communication method. Sets up classes for server and client, creates socket. 
-* trivia.json: Contains the question/answer bank, 10 pairs total.
-* install.sh: Creates moderator, sockets, and assigns the appropriate permissions.
-* mkusr.sh: Sets up a player# account each time it is ran, gives copy of client.py/comm.py files and assigns permission.
-* uninstall.sh: Removes all moderator/player accounts.
+| File            | Usage                                                                       |
+|:---------------:|:----------------------------------------------------------------------------|
+| server.py       | Hosts the state machine logic and runs the game server.                     |
+| client_tui.py   | Lets players communicate with the server for buzzing/chatting/answering.    |
+| comm.py         | Implements communication method. Sets up classes for server and client, connects to proper IP and port, continuously polls for I/O with select().|
+| trivia.json     | Contains the question/answer bank.                                          |
