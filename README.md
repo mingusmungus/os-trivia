@@ -8,7 +8,7 @@ Claude was used to write the curses tui in client_tui.py.
 2. Enter your username (max 15 characters).
 3. Enter the current address:port for the ngrok proxy. If it crashes server-side, a new one will have to be generate, so you'll have to update it if that happens.
 
-### Current ngrok
+### Current ngrok proxy address:port
 2.tcp.us-cal-1.ngrok.io:18000
 
 ### Game rules:
