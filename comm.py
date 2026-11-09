@@ -3,7 +3,8 @@ import selectors
 import json
 import os
 
-SERVER_IP = "127.0.0.1"
+# IP routed through ngrok to hide user IPs from potential bots
+PROXY = "tcp://2.tcp.us-cal-1.ngrok.io:18000"
 
 class TCPServer:
     # Swapped out the socket path for IP and port
@@ -73,9 +74,12 @@ class TCPServer:
         self.clients.clear()
     
 class TCPClient:
-    def __init__(self, socket_path=(SERVER_IP, 5555)):
+    def __init__(self, host, port):
+        # Takes on host and port instance variables
+        self.host = host
+        self.port = int(port)
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.connect(socket_path)
+        self.sock.connect((self.host, self.port))
         self.buffer = ""
 
     def send(self, msg_dict):

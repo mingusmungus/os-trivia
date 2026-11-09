@@ -419,7 +419,11 @@ def main(stdscr):
 if __name__ == "__main__":
     # Create username and knock on server's door
     username = input("Enter username: ")
-    client = TCPClient()
+    address = input("Enter ngrok address/port: ")
+
+    host, port = address.strip().split(":")
+
+    client = TCPClient(host, port)
     client.send({"action": "join", "username": username})
 
     curses.wrapper(main)
