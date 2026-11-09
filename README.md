@@ -6,7 +6,10 @@ Claude was used to write the curses tui in client_tui.py.
 ### To get the game running:
 1. Download the latest release and launch the executable.
 2. Enter your username (max 15 characters).
-3. Enter the current address:port for the ngrok proxy
+3. Enter the current address:port for the ngrok proxy. If it crashes server-side, a new one will have to be generate, so you'll have to update it if that happens.
+
+### Current ngrok
+2.tcp.us-cal-1.ngrok.io:18000
 
 ### Game rules:
 * Press **BUZZER!** to buzz in when you know the answer.
