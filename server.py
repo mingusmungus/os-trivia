@@ -124,7 +124,6 @@ while True:
                     state = RESOLUTION
 
                 else:
-                    score[conn] -= 1
                     display_log(f"{players[conn]} guessed wrong! '{user_text}', which is not correct.")
 
                     if len(attempted_players) >= len(players):

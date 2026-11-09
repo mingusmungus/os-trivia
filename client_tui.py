@@ -417,15 +417,38 @@ def main(stdscr):
 
 
 if __name__ == "__main__":
-    # Create username and knock on server's door
-    username = input("Enter username: ")
-    address = input("Enter ngrok address/port: ")
+    # Get the proxy address (changes upon ngrok resetting) and username
+    get_input = input("Enter username (max 15 chars): ")
+    username = get_input[:15]
 
-    host, port = address.strip().split(":")
+    while True:
+        address = input("Enter ngrok address/port: ")
 
-    client = TCPClient(host, port)
+        try:
+            # Catch formatting errors (missing colon, letters instead of port numbers)
+            host, port = address.strip().split(":")
+            port = int(port) 
+            
+            print(f"Attempting to connect to {host} on port {port}...")
+            
+            # Catch actual networking errors during connection
+            client = TCPClient(host, port)
+            
+            # If we reach this line, connection succeeded. Break the loop.
+            break 
+            
+        except ValueError:
+            print("[Error] Invalid format. Make sure you include the colon (e.g., address:port).")
+        except socket.gaierror:
+            print("[Error] Could not resolve address. Check for typos in the ngrok URL.")
+        except ConnectionRefusedError:
+            print("[Error] Connection refused. The server might be down or restarting.")
+        except TimeoutError:
+            print("[Error] Connection timed out. Check your internet connection.")
+        except Exception as e:
+            print(f"[Error] Unexpected failure: {e}")
+
+    
     client.send({"action": "join", "username": username})
-
     curses.wrapper(main)
-
     print("\nConnection closed. Thanks for playing!\n")
