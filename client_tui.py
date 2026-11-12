@@ -16,6 +16,9 @@ from comm import TCPClient
 import textwrap
 import time
 import sys
+import socket
+import os
+import json
 
 PENGUIN_W = 36           # columns the penguin needs inside the right box
 PENGUIN_H = 16           # rows the penguin needs
@@ -422,7 +425,12 @@ if __name__ == "__main__":
     username = get_input[:15]
 
     while True:
-        address = input("Enter ngrok address/port: ")
+        print("\n-> To play locally:\n \
+        1.) Download the source code\n \
+        2.) Run python3 server.py\n \
+        3.) Use address:port = 127.0.0.1:5555\n")
+        print("-> Otherwise, to play online enter the ngrok address:port in the README\n")
+        address = input("Enter address/port: ")
 
         try:
             # Catch formatting errors (missing colon, letters instead of port numbers)

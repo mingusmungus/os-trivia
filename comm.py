@@ -33,6 +33,7 @@ class TCPServer:
     def send_to(self, conn, msg_dict):
         payload = json.dumps(msg_dict) + "\n"
         conn.sendall(payload.encode('utf-8'))
+            
 
     def poll_events(self, timeout=1.0):
         """Returns a list of (connection, message_dict) tuples."""
@@ -102,5 +103,10 @@ class TCPClient:
         while "\n" in self.buffer:
             line, self.buffer = self.buffer.split("\n", 1)
             if line.strip():
-                messages.append(json.loads(line))
+                try:
+                    messages.append(json.loads(line))
+                except json.JSONDecodeError:
+                    messages.append({"action": "chat", "username": "SERVER", "msg": f"JSONDecodeError, who else is listening? RAW: {line}"})
+                except:
+                    pass
         return messages

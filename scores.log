@@ -532,3 +532,66 @@ Game Over! Calculating final scores . . .
 09:09:09 - alice disconnected.
 09:09:09 - 
 Game Over! Calculating final scores . . .
+01:52:21 - Server running . . .
+01:52:31 - zane joined! (Total: 1)
+01:52:34 - [zane]: sadasd
+01:52:34 - [zane]: alksdjlaksjd
+01:52:35 - [zane]: qwoipjepqwoeju
+01:52:37 - [zane]: {qwqw}
+01:52:41 - Question: This is self-replicating/self-propagating.
+01:52:43 - zane buzzed in!
+01:52:45 - zane got it right! Answer: worms
+01:52:45 - zane Score: 1
+01:52:48 - Question: This system call monitors file descriptors to check if I/O is possible with any of them
+01:52:48 - zane disconnected.
+01:52:48 - 
+Game Over! Calculating final scores . . .
+01:55:09 - zane joined! (Total: 1)
+01:55:19 - Question: A file descriptor of 0 represents . . .
+01:55:56 - zane disconnected.
+01:55:56 - 
+Game Over! Calculating final scores . . .
+02:16:15 - zane joined! (Total: 1)
+02:16:22 - [zane]: hi
+02:16:24 - [zane]: aslkdjflskdjf
+02:16:25 - Question: What software vulnerability arises due to race conditions?
+02:17:16 - [zane]: aslkdjalskjd
+02:17:24 - zane disconnected.
+02:17:24 - 
+Game Over! Calculating final scores . . .
+02:24:36 - Server running . . .
+02:25:24 - ajaj joined! (Total: 1)
+02:25:27 - [ajaj]: zane
+02:25:28 - [ajaj]: sksk
+02:25:31 - ajaj disconnected.
+02:25:34 - Question: This data structure can help control shared resources among threads.
+02:25:34 - 
+Game Over! Calculating final scores . . .
+02:43:40 - z joined! (Total: 1)
+02:43:43 - [z]: sk
+02:43:46 - [z]: bla
+02:43:50 - Question: What is the default port for SSH?
+02:43:52 - z buzzed in!
+02:43:54 - z got it right! Answer: 22
+02:43:54 - z Score: 1
+02:43:57 - Question: A file descriptor of 1 represents . . .
+02:44:01 - z buzzed in!
+02:44:04 - z got it right! Answer: stdout
+02:44:04 - z Score: 2
+02:44:07 - Question: This is self-replicating/self-propagating.
+02:44:09 - z buzzed in!
+02:44:11 - z got it right! Answer: worms
+02:44:11 - z Score: 3
+02:44:14 - Question: What computing issue does the dining philosopher's problem demonstrate? 
+02:44:17 - z buzzed in!
+02:44:19 - z got it right! Answer: deadlock
+02:44:19 - z Score: 4
+02:44:22 - Question: What command reveals system calls in Linux?
+02:44:25 - z buzzed in!
+02:44:26 - z got it right! Answer: strace
+02:44:26 - z Score: 5
+02:44:29 - [z]: s
+02:44:29 - Question: What software vulnerability arises due to race conditions?
+02:44:34 - z disconnected.
+02:44:34 - 
+Game Over! Calculating final scores . . .

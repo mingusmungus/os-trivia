@@ -64,29 +64,30 @@ while True:
     for conn, msg in messages:
         action = msg.get("action")
         
-        if action == "join":
-            # Initialize name and score
-            players[conn] = msg.get("username")
-            score[conn] = 0
+        if conn not in players:
+            if action == "join":
+                # Initialize name and score
+                players[conn] = msg.get("username")
+                score[conn] = 0
 
-            # Broadcast lets users know who joined, also print it locally to MOD terminal
-            display_log(f"{players[conn]} joined! (Total: {len(players)})")
+                # Broadcast lets users know who joined, also print it locally to MOD terminal
+                display_log(f"{players[conn]} joined! (Total: {len(players)})")
 
-            # Automatic start based on player count
-            if state == LOBBY and len(players) >= 1:
-                state = STARTING
-                countdown_start = time.time()
-                server.broadcast({"msg": "Minimum players reached! Game starting in 10 seconds..."})
-                print("Countdown started. . .")
-                
-            # Sync late-joiners with the current question
-            elif state in [WAIT_BUZZ, ANSWERING] and current_trivia:
-                server.send_to(conn, {"msg": "You joined mid-game! Here is the current question:"})
-                server.send_to(conn, {"type": "question", "msg": f"Q: {current_trivia['q']}"})
-                
-                # If someone is already typing their answer, let the new player know
-                if state == ANSWERING and active_buzzer:
-                    server.send_to(conn, {"msg": f"...waiting for {players[active_buzzer]} to answer."})
+                # Automatic start based on player count
+                if state == LOBBY and len(players) >= 1:
+                    state = STARTING
+                    countdown_start = time.time()
+                    server.broadcast({"msg": "Minimum players reached! Game starting in 10 seconds..."})
+                    print("Countdown started. . .")
+                    
+                # Sync late-joiners with the current question
+                elif state in [WAIT_BUZZ, ANSWERING] and current_trivia:
+                    server.send_to(conn, {"msg": "You joined mid-game! Here is the current question:"})
+                    server.send_to(conn, {"type": "question", "msg": f"Q: {current_trivia['q']}"})
+                    
+                    # If someone is already typing their answer, let the new player know
+                    if state == ANSWERING and active_buzzer:
+                        server.send_to(conn, {"msg": f"...waiting for {players[active_buzzer]} to answer."})
        
         elif action == "buzz" and state == WAIT_BUZZ:
             if conn in attempted_players:
@@ -196,10 +197,12 @@ while True:
         if questions_asked >= max_questions:
             state = GAME_OVER
         else:
-            server.broadcast({"msg": f"Next round in 3 seconds, get ready!"})
-            print("Next round in 3 seconds, get ready!")
-            time.sleep(3)
-            state = ASK_QUESTION
+            if active_buzzer is not None:
+                server.broadcast({"msg": f"Next round in 3 seconds, get ready!"})
+                countdown_timer = time.time()
+                active_buzzer = None
+            if time.time() - countdown_timer >= 3:
+                state = ASK_QUESTION
 
     if state == GAME_OVER:
         print("\nGame Over! Calculating final scores . . .")
